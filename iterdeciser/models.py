@@ -19,10 +19,16 @@ class Response(models.Model):
 class Question(models.Model):
     """A question that can be answered by multiple responses as an Answer."""
     title = models.CharField(max_length=200)
+    hidden = models.BooleanField(default=False)
     responses = models.ManyToManyField(Response, through='Answer')
 
     def __str__(self):
-        return self.title
+        ret = self.title
+
+        if self.hidden:
+            ret += ' [hidden]'
+
+        return ret
 
 
 class Answer(models.Model):
