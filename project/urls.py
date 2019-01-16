@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from iterdeciser.views import AnswerViewset, ResponseViewset, NextResponseViewset
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('api/', ResponseViewset.as_view(actions={'get': 'list'})),
+    path('next/', NextResponseViewset.as_view(actions={'get': 'list'})),
 ]

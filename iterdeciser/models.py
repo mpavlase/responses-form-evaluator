@@ -4,7 +4,7 @@ from django.db import models
 class Response(models.Model):
     """High level object that wraps one set of pairs (question, answer)"""
     enabled = models.BooleanField(default=True)
-    note = models.CharField(max_length=200)
+    note = models.CharField(max_length=200, blank=True)
     iteration_count = models.IntegerField(default=0)
 
     def __str__(self):
