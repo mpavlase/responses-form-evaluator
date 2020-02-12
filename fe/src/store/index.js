@@ -7,24 +7,28 @@ export default new Vuex.Store({
   state: {
     responses: {
       0: {
-        response: {
-          1: {
+        response: [
+          {
+            id: 1,
             question: 'ot1',
-            answer: '...'
+            answer: '...0'
           },
-          2: {
+          {
+            id: 2,
             question: 'ot2',
-            answer: 'odpoved 2'
+            answer: 'odpoved 20'
           },
-          3: {
+          {
+            id: 3,
             question: 'ot3',
-            answer: 'odpov3'
+            answer: 'odpov30'
           },
-          4: {
+          {
+            id: 4,
             question: 'ot4',
-            answer: 'odpov4'
+            answer: 'odpov40'
           }
-        },
+        ],
         votes: {
           jana: {
             vote: 'no',
@@ -37,24 +41,28 @@ export default new Vuex.Store({
         }
       },
       1: {
-        response: {
-          1: {
+        response: [
+          {
+            id: 1,
             question: 'ot1',
             answer: '...1'
           },
-          2: {
+          {
+            id: 2,
             question: 'ot2',
             answer: 'odpoved 21'
           },
-          3: {
+          {
+            id: 3,
             question: 'ot3',
             answer: 'odpov31'
           },
-          4: {
+          {
+            id: 4,
             question: 'ot4',
             answer: 'odpov41'
           }
-        },
+        ],
         votes: {
           jana: {
             vote: 'yes',
@@ -67,24 +75,28 @@ export default new Vuex.Store({
         }
       },
       2: {
-        response: {
-          1: {
+        response: [
+          {
+            id: 1,
             question: 'ot1',
             answer: '...2'
           },
-          2: {
+          {
+            id: 2,
             question: 'ot2',
             answer: 'odpoved 22'
           },
-          3: {
+          {
+            id: 3,
             question: 'ot3',
             answer: 'odpov32'
           },
-          4: {
+          {
+            id: 4,
             question: 'ot4',
             answer: 'odpov42'
           }
-        },
+        ],
         votes: {
           jana: {
             vote: 'no',
@@ -97,24 +109,28 @@ export default new Vuex.Store({
         }
       },
       3: {
-        response: {
-          1: {
+        response: [
+          {
+            id: 1,
             question: 'ot1',
             answer: '...3'
           },
-          2: {
+          {
+            id: 2,
             question: 'ot2',
             answer: 'odpoved 23'
           },
-          3: {
+          {
+            id: 3,
             question: 'ot3',
             answer: 'odpov33'
           },
-          4: {
+          {
+            id: 4,
             question: 'ot4',
             answer: 'odpov43'
           }
-        },
+        ],
         votes: {
           jana: {
             vote: 'yes',
@@ -127,7 +143,7 @@ export default new Vuex.Store({
         }
       }
     },
-    hiddenQuestions: new Set([]),
+    hiddenQuestions: [],
     name: '[myname]',
     voteOptions: ['yes', 'no'],
     currentResponseId: 0
@@ -145,12 +161,20 @@ export default new Vuex.Store({
       }
       Vue.set(state.responses[id].votes[state.name], 'vote', vote)
     },
-    toggleResponseVisibility (state, { reponse }) {
-      if (state.hiddenQuestions.has(reponse)) {
-        state.hiddenQuestions.delete(reponse)
+    toggleQuestionVisibility (state, question) {
+      // window.console.log(`toggle ${id}, ${state.hiddenQuestions.entries()}`)
+      // window.console.debug(state.hiddenQuestions)
+
+      const internalSet = new Set(state.hiddenQuestions)
+      const item = question.id
+
+      if (internalSet.has(item)) {
+        internalSet.delete(item)
       } else {
-        state.hiddenQuestions.add(reponse)
+        internalSet.add(item)
       }
+
+      state.hiddenQuestions = [...internalSet]
     },
     jumpBackward (state) {
       // window.console.log(this)
@@ -188,13 +212,19 @@ export default new Vuex.Store({
       // window.console.log(ids)
       const index = ids.indexOf(String(state.currentResponseId))
       if (index === -1) {
-        // window.console.log('jump forward je -1')
         return false
       }
 
       const nextIndex = index + 1
 
       return nextIndex < ids.length
+    },
+    isQuestionVisible (state) {
+      return function (question) {
+        const item = question.id
+        const internalSet = new Set(state.hiddenQuestions)
+        return !internalSet.has(item)
+      }
     }
   }
 })

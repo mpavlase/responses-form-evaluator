@@ -1,10 +1,18 @@
 <template>
   <div>
-    <div @click="jumpBackward">jump to previous (possible? {{ canJumpBackward }})</div>
-    <div @click="jumpForward">jump to next (possible? {{ canJumpForward }})</div>
+    <span @click="jumpBackward" v-show="canJumpBackward">jump to previous</span> |
+    <span @click="jumpForward" v-show="canJumpForward">jump to next</span>
 
-    <div v-for="(item, id) in response.response" v-bind:key="id">
-      <span class="question">{{ item.question }}</span>
+    <ul>
+      <li v-for="item in response.response"
+          v-bind:key="item.id"
+          v-show="!isQuestionVisible(item)"
+          @click="toggleQuestionVisibility(item)"
+      >{{ item.question }}</li>
+    </ul>
+
+    <div v-for="item in response.response" v-bind:key="item.id" v-show="isQuestionVisible(item)">
+      <span class="question" @click="toggleQuestionVisibility(item)">{{ item.question }}</span>
       <span class="answer">{{ item.answer }}</span>
     </div>
 
@@ -38,6 +46,12 @@ export default {
       if (this.canJumpForward) {
         this.$store.commit('jumpForward')
       }
+    },
+    toggleQuestionVisibility (item) {
+      this.$store.commit('toggleQuestionVisibility', item)
+    },
+    isQuestionVisible (item) {
+      return  this.$store.getters.isQuestionVisible(item)
     }
   },
   props: {
@@ -99,6 +113,10 @@ export default {
     },
     canJumpForward () {
       return this.$store.getters.canJumpForward
+    },
+    hiddenQuestions () {
+      //console.log(this.$store.state.hiddenQuestions)
+      return this.$store.state.hiddenQuestions
     }
   }
 }
